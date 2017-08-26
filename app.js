@@ -16,7 +16,28 @@ var connector = new builder.ChatConnector({
 // Listen for messages from users
 server.post('/api/messages', connector.listen());
 
+// This is a dinner reservation bot that uses a waterfall technique to prompt users for input.
+var bot = new builder.UniversalBot(connector, [
+    function (session) {
+        session.send("Welcome to the homework scheduler.");
+        builder.Prompts.time(session, "Please provide a homework date and time (e.g.: June 6th at 5pm)");
+    },
+    function (session, results) {
+        session.dialogData.homeworkDate = builder.EntityRecognizer.resolveTime([results.response]);
+        builder.Prompts.text(session, "What is the class name?");
+    },
+    function (session, results) {
+        session.dialogData.className = results.response;
+        builder.Prompts.text(session, "What is your name?");
+    },
+    function (session, results) {
+        session.dialogData.studentName = results.response;
+
+        // Process request and display reservation details
+        session.send("Homework received. Homework details: <br/>Date: %s <br/>Class name: %s <br/>Student name: %s",
+            session.dialogData.homeworkDate, session.dialogData.className, session.dialogData.studentName);
+        session.endDialog();
+    }
+]);
+
 // Receive messages from the user and respond by echoing each message back (prefixed with 'You said:')
-var bot = new builder.UniversalBot(connector, function (session) {
-    session.send("You said: %s", session.message.text);
-});
