@@ -1,0 +1,19 @@
+{
+  "name": "bdone",
+  "version": "1.0.0",
+  "description": "bDone Bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LuisAlvarez98/beDone.git"
+  },
+  "author": "beDone",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LuisAlvarez98/beDone/issues"
+  },
+  "homepage": "https://github.com/LuisAlvarez98/beDone#readme"
+}
