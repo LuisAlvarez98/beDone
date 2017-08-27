@@ -67,28 +67,35 @@ bot.dialog('main', intents);
 
 
 intents.matches('show tasks', function(session, args){
-    let num = 5;
-    session.send("I found %s tasks.", num);
+    con.connect(function(err) {
+        if (err) throw err;
+          console.log("Connect-ED!");
+          var sql = "SELECT * from tasks";
+          con.query(sql, function(err,result){
+           if(err) throw err;
+           let num = result.length;
+           session.send("I found %s tasks.", num);
+           for (var i in result) {
+           var tasks = result[i];
 
-    for (i = 0; i < 5; i++){
-      var title = "Event";
-      var time = "00:00";
-      var date = "Monday";
-      var card = createEventCard(session, title, time, date);
+           var title = result[i].subject_name;
+           var time = result[i].time;
+           var date = result[i].date
+           var card = createEventCard(session, title, time, date);
 
-       // attach the card to the reply message
-       var msg = new builder.Message(session).addAttachment(card);
-       session.send(msg);
+            // attach the card to the reply message
+            var msg = new builder.Message(session).addAttachment(card);
+            session.send(msg);
+            }
+        });
+    });
+    //var date = builder.EntityRecognizer.findEntity(args.entities,'day');
+    //var date_name = date.entity;
+    //session.send("Date: " + date_name);
 
-    }
-
-    var date = builder.EntityRecognizer.findEntity(args.entities,'day');
-    var date_name = date.entity;
-    session.send("Date: " + date_name);
-
-    var task = builder.EntityRecognizer.findEntity(args.entities,'work');
-    var task_name = task.entity;
-    session.send("Task: " + task_name);
+    //var task = builder.EntityRecognizer.findEntity(args.entities,'work');
+    //var task_name = task.entity;
+    //session.send("Task: " + task_name);
     //sprintf('%', date);
 
     // guardar aqui la fecha, evento etc
@@ -97,7 +104,7 @@ intents.matches('show tasks', function(session, args){
 intents.matches('create task', function(session, args){
     session.send("Got it. I'll make a note of it for you");
 
-    var date = builder.EntityRecognizer.findEntity(args.entities,'date');
+    var date = builder.EntityRecognizer.findEntity(args.entities,'day');
     var date_name = date.entity;
     session.send("Date: " + date_name);
 
@@ -105,9 +112,21 @@ intents.matches('create task', function(session, args){
     var task_name = task.entity;
     session.send("Task: " + task_name);
 
-    var time = builder.EntityRecognizer.findEntity(args.entities,'time');
+    /*
+    var x;
+    var text = "";
+    var time = builder.EntityRecognizer.findEntity(args.entities,'clock');
+    for (x in time){
+      text += time[x] + " ";
+      console.log(text);
+    }
     var time_name = time.entity;
-    session.send("Time: " +  time_name);
+    //var time_name = time.entity;
+    */
+
+    var time = builder.EntityRecognizer.findEntity(args.entities,'clock');
+    var time_name = time.entity;
+    session.send("Time: " + time_name);
 
     var course = builder.EntityRecognizer.findEntity(args.entities,'course');
     var course_name = course.entity;
