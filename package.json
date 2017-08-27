@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/LuisAlvarez98/beDone/issues"
   },
-  "homepage": "https://github.com/LuisAlvarez98/beDone#readme"
+  "homepage": "https://github.com/LuisAlvarez98/beDone#readme",
+  "dependencies": {
+    "mongodb": "^2.2.31"
+  }
 }
