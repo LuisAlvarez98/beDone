@@ -9,10 +9,10 @@ var date_name;
 var mysql = require('mysql');
 
  var con = mysql.createConnection({
-  host: "localhost",
-   user: "root",
-   password: "",
-  database: "database_hack"
+  host: "us-cdbr-iron-east-05.cleardb.net",
+   user: "b20121f0eeafc4",
+   password: "075b932c",
+  database: "heroku_322cec8d3aa41a0"
  });
 //endcon
 // Setup Restify Server
@@ -84,6 +84,7 @@ con.connect(function(err) {
                var time = result[i].time;
                var date = result[i].date;
                //var card = createEventCard(session, title, time, date);
+
                if(date === date_name){
                  num++;
                  arrIndexes.push(i);
