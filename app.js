@@ -1,5 +1,7 @@
 var restify = require('restify');
 var builder = require('botbuilder');
+var apiairecognizer = require('api-ai-recognizer');
+var request = require('request');
 
 // Setup Restify Server
 var server = restify.createServer();
@@ -19,37 +21,29 @@ server.post('/api/messages', connector.listen());
 // This is a dinner reservation bot that uses a waterfall technique to prompt users for input.
 var bot = new builder.UniversalBot(connector, [
   function (session) {
+      session.send("Kill me");
       session.beginDialog('test');
   },
 
 ]);
 
-bot.dialog('test', [
-  function (session) {
-      session.send("Welcome to the homework scheduler.");
-      builder.Prompts.time(session, "Please provide a homework date and time (e.g.: June 6th at 5pm)");
-  },
-  function (session, results) {
-      session.dialogData.homeworkDate = builder.EntityRecognizer.resolveTime([results.response]);
-      builder.Prompts.text(session, "What is the class name?");
-  },
-  function (session, results) {
-      session.dialogData.className = results.response;
-      builder.Prompts.text(session, "What is your name?");
-  },
-  function (session, results) {
-      session.dialogData.studentName = results.response;
+var recognizer = new apiairecognizer("84726c991e6645c4bdc7e39b44102686");
+var intents = new builder.IntentDialog({
+         recognizers: [recognizer]
+});
 
-      // Process request and display reservation details
-      session.send("Homework received. Homework details: <br/>Date: %s <br/>Class name: %s <br/>Student name: %s",
-          session.dialogData.homeworkDate, session.dialogData.className, session.dialogData.studentName);
-      session.endDialog();
-  }
-]);
+bot.dialog('test', intents);
 
 
+intents.matches('events', function(session, args){
+    session.send('you have 2 homeworks for tomorrow');
+    // guardar aqui la fecha, evento etc
+});
 
+intents.matches('cancel', function(session, args){
+    session.send('dafuq');
+});
 
-
-
-// Receive messages from the user and respond by echoing each message back (prefixed with 'You said:')
+//event events
+//show con datos
+//no se si se puede guardar cerrar y que todavia esten aqui
