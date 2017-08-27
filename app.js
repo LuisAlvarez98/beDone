@@ -2,7 +2,16 @@ var restify = require('restify');
 var builder = require('botbuilder');
 var apiairecognizer = require('api-ai-recognizer');
 var request = require('request');
+//database connection
+var mysql = require('mysql');
 
+var con = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "database_hack"
+});
+//end database connection
 // Setup Restify Server
 var server = restify.createServer();
 server.listen(process.env.port || process.env.PORT || 3978, function () {
@@ -38,6 +47,16 @@ bot.dialog('test', intents);
 intents.matches('events', function(session, args){
     session.send('you have 2 homeworks for tomorrow');
     // guardar aqui la fecha, evento etc
+    con.connect(function(err) {
+      if (err) throw err;
+      console.log("Connect-ED!");
+      var sql = "INSERT into tasks (task) VALUES ('jajajaja')";
+      con.query(sql, function(err,result){
+       if(err) throw err;
+       console.log("1 Record inserted");
+
+    });
+    });
 });
 
 intents.matches('cancel', function(session, args){
