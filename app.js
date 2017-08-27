@@ -69,19 +69,53 @@ intents.matches('show tasks', function(session, args){
        var msg = new builder.Message(session).addAttachment(card);
        session.send(msg);
 
-
-
     }
 
-    //var date = builder.EntityRecognizer.findEntity(args.entities, 'sys.date');
-    //sessions.send("I AM SHOOKETH");
+    var date = builder.EntityRecognizer.findEntity(args.entities,'day');
+    var date_name = date.entity;
+    session.send("Date: " + date_name);
+
+    var task = builder.EntityRecognizer.findEntity(args.entities,'work');
+    var task_name = task.entity;
+    session.send("Task: " + task_name);
     //sprintf('%', date);
 
     // guardar aqui la fecha, evento etc
 });
 
-intents.matches('cancel', function(session, args){
+intents.matches('create task', function(session, args){
     session.send("Got it. I'll make a note of it for you");
+
+    var date = builder.EntityRecognizer.findEntity(args.entities,'day');
+    var date_name = date.entity;
+    session.send("Date: " + date_name);
+
+    var task = builder.EntityRecognizer.findEntity(args.entities,'work');
+    var task_name = task.entity;
+    session.send("Task: " + task_name);
+
+    /*
+    var x;
+    var text = "";
+    var time = builder.EntityRecognizer.findEntity(args.entities,'clock');
+    for (x in time){
+      text += time[x] + " ";
+      console.log(text);
+    }
+    var time_name = time.entity;
+    //var time_name = time.entity;
+    */
+
+    var time = builder.EntityRecognizer.findEntity(args.entities,'clock');
+    var time_name = time.entity;
+    session.send("Time: " + time_name);
+
+    var course = builder.EntityRecognizer.findEntity(args.entities,'course');
+    var course_name = course.entity;
+    session.send("Course: " + course_name);
+
+
+
 
 });
 
