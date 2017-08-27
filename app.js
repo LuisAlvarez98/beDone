@@ -97,7 +97,7 @@ intents.matches('show tasks', function(session, args){
 intents.matches('create task', function(session, args){
     session.send("Got it. I'll make a note of it for you");
 
-    var date = builder.EntityRecognizer.findEntity(args.entities,'day');
+    var date = builder.EntityRecognizer.findEntity(args.entities,'date');
     var date_name = date.entity;
     session.send("Date: " + date_name);
 
@@ -105,21 +105,9 @@ intents.matches('create task', function(session, args){
     var task_name = task.entity;
     session.send("Task: " + task_name);
 
-    /*
-    var x;
-    var text = "";
-    var time = builder.EntityRecognizer.findEntity(args.entities,'clock');
-    for (x in time){
-      text += time[x] + " ";
-      console.log(text);
-    }
+    var time = builder.EntityRecognizer.findEntity(args.entities,'time');
     var time_name = time.entity;
-    //var time_name = time.entity;
-    */
-
-    var time = builder.EntityRecognizer.findEntity(args.entities,'clock');
-    var time_name = time.entity;
-    session.send("Time: " + time_name);
+    session.send("Time: " +  time_name);
 
     var course = builder.EntityRecognizer.findEntity(args.entities,'course');
     var course_name = course.entity;
