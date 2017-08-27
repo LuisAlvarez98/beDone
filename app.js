@@ -2,6 +2,7 @@ var restify = require('restify');
 var builder = require('botbuilder');
 var apiairecognizer = require('api-ai-recognizer');
 var request = require('request');
+var date_name;
 
 //con
 
@@ -71,19 +72,34 @@ con.connect(function(err) {
             var sql = "SELECT * from tasks";
             con.query(sql, function(err,result){
              if(err) throw err;
-             let num = result.length;
-             session.send("I found %s tasks.", num);
+             //let num = result.length;
+             //session.send("I found %s tasks.", num);
+             var num = 0;
+             var arrIndexes = [];
+             var date2 = builder.EntityRecognizer.findEntity(args.entities,'date');
+             date_name = date2.entity;
              for (var i in result) {
-             var tasks = result[i];
-
-             var title = result[i].subject_name;
-             var time = result[i].time;
-             var date = result[i].date
-             var card = createEventCard(session, title, time, date);
-
+               var tasks = result[i];
+               var title = result[i].subject_name;
+               var time = result[i].time;
+               var date = result[i].date;
+               //var card = createEventCard(session, title, time, date);
+               if(date === date_name){
+                 num++;
+                 arrIndexes.push(i);
+                 //if(i == result.length){
+                }
+              //}
+                }
+                session.send("I found %s tasks.", num);
+                for (var j in arrIndexes){
+                  let cardDay = createEventCard(session, result[arrIndexes[j]].subject_name
+                                                 , result[arrIndexes[j]].time, result[arrIndexes[j]].date);
+                  let msg = new builder.Message(session).addAttachment(cardDay);
+                  session.send(msg);
               // attach the card to the reply message
-              var msg = new builder.Message(session).addAttachment(card);
-              session.send(msg);
+              //var msg = new builder.Message(session).addAttachment(card);
+              //session.send(msg);
               }
           });
 
@@ -104,7 +120,7 @@ con.connect(function(err) {
       session.send("Got it. I'll make a note of it for you");
 
       var date = builder.EntityRecognizer.findEntity(args.entities,'date');
-      var date_name = date.entity;
+      date_name = date.entity;
       session.send("Date: " + date_name);
 
       var task = builder.EntityRecognizer.findEntity(args.entities,'work');
